@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "395248821866",
+    "project_id": "smarthome-a51d2",
+    "storage_bucket": "smarthome-a51d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395248821866:android:e6a85909db8e99e4034c13",
+        "android_client_info": {
+          "package_name": "com.example.smarthome"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-Baf7wvOy79tHrPdE06aotdUXtR-eXf8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
