@@ -1,6 +1,7 @@
 package com.example.smarthome;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,8 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.smarthome.data.SensorAdapter;
+import com.example.smarthome.data.SensorModal;
 import com.example.smarthome.data.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,7 +28,14 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,20 +43,19 @@ public class MainActivity extends AppCompatActivity {
     Button signup, signin;
     ProgressBar progressBar;
     //DBHelper DB;
-
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth mAuth;
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null){
-//            Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
-//            startActivity(intent);
-//        }
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
+            startActivity(intent);
+        }
+    }
 
     public void checkEmail(View view)
     {
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         //DB = new DBHelper(this);
         mAuth = FirebaseAuth.getInstance();
 
-        signup.setOnClickListener(new View.OnClickListener (){
+        signup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -85,16 +95,13 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 firebaseDatabase = FirebaseDatabase.getInstance();
 
-                if(firstName.equals("")||lastName.equals("")||email.equals("")||pass.equals("")||repass.equals(""))
-                {
+                if (firstName.equals("") || lastName.equals("") || email.equals("") || pass.equals("") || repass.equals("")) {
                     Toast.makeText(MainActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
-                }
-                else if (!pass.equals(repass)) {
+                } else if (!pass.equals(repass)) {
                     Toast.makeText(MainActivity.this, "Password do not match", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
-                }
-                else{
+                } else {
                     mAuth.createUserWithEmailAndPassword(email, pass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -106,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                                         firebaseDatabase.getReference().child("Users").child(id).setValue(user);
                                         Toast.makeText(MainActivity.this, "Registration Successful",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                         startActivity(intent);
 
                                     } else {
@@ -141,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signin.setOnClickListener(new View.OnClickListener (){
+
+        signin.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -149,6 +157,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 }

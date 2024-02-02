@@ -10,8 +10,19 @@ public class SensorModal implements Parcelable {
     private String sensorName;
     private String sensorType;
     private String sensorImg;
-
     private String sensorID;
+
+    public SensorModal(String sensorName, String sensorType, String sensorImg) {
+        this.sensorName = sensorName;
+        this.sensorType = sensorType;
+        this.sensorImg = sensorImg;
+    }
+
+    protected SensorModal(Parcel in) {
+        sensorName = in.readString();
+        sensorType = in.readString();
+        sensorImg = in.readString();
+    }
 
     public void setSensorImg(String sensorImg) {
         this.sensorImg = sensorImg;
@@ -37,19 +48,15 @@ public class SensorModal implements Parcelable {
         this.sensorID = sensorID;
     }
 
+    public SensorModal() {
+    }
+
     public String getSensorType() {
         return sensorType;
     }
 
     public String getSensorID() {
         return sensorID;
-    }
-
-    protected SensorModal(Parcel in) {
-        sensorName = in.readString();
-        sensorType = in.readString();
-        sensorID = in.readString();
-        sensorImg = in.readString();
     }
 
     public static final Creator<SensorModal> CREATOR = new Creator<SensorModal>() {
@@ -73,7 +80,7 @@ public class SensorModal implements Parcelable {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(sensorName);
         parcel.writeString(sensorType);
-        parcel.writeString(sensorID);
+        parcel.writeString(sensorImg);
     }
 
 }

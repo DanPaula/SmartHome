@@ -34,6 +34,18 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/idSensorType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/idSensorName"
+            android:layout_margin="3dp"
+            android:padding="4dp"
+            android:text="Sensor Type"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

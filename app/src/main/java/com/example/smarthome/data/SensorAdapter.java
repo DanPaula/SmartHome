@@ -2,10 +2,20 @@ package com.example.smarthome.data;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +52,22 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.ViewHolder
     public void onBindViewHolder(@NonNull SensorAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //setting data to our recycler view item on below line.
         SensorModal sensorModal = sensorModalArrayList.get(position);
-        holder.sensorTV.setText(sensorModal.getSensorName());
-        Picasso.get().load(sensorModal.getSensorImg()).into(holder.sensorIV);
+        holder.sensorName.setText(sensorModal.getSensorName());
+        holder.sensorType.setText(sensorModal.getSensorType());
+
+        String imagePath = sensorModal.getSensorImg().toString();
+
+        if (imagePath == "thermometer")
+        {
+            holder.sensorImage.setImageResource(R.drawable.thermometer);
+        }
+
         //adding animation to recycler view item on below line.
         setAnimation(holder.itemView, position);
-        holder.sensorTV.setOnClickListener(new View.OnClickListener() {
+        holder.sensorName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sensorClickInterface.onCourseClick(position);
+                sensorClickInterface.onSensorClick(position);
             }
         });
     }
@@ -70,19 +88,20 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         //creating variable for our image view and text view on below line.
-        private ImageView sensorIV;
-        private TextView sensorTV;
+        private ImageView sensorImage;
+        private TextView sensorName, sensorType;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //initializing all our variables on below line.
-            sensorIV = itemView.findViewById(R.id.idSensorImage);
-            sensorTV = itemView.findViewById(R.id.idSensorName);
+            sensorImage = itemView.findViewById(R.id.idSensorImage);
+            sensorName = itemView.findViewById(R.id.idSensorName);
+            sensorType = itemView.findViewById(R.id.idSensorType);
         }
     }
 
     //creating a interface for on click
     public interface SensorClickInterface {
-        void onCourseClick(int position);
+        void onSensorClick(int position);
     }
 }

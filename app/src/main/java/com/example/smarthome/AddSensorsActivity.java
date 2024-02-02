@@ -81,10 +81,10 @@ public class AddSensorsActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 if(sensorType == "Temperature and Humidity")
                 {
-                    sensorImage = "thermometer.png";
+                    sensorImage = "thermometer";
                 }
 
-                Sensor sensor = new Sensor(sensor_name, sensorType , sensorImage);
+                SensorModal sensor = new SensorModal(sensor_name, sensorType, sensorImage);
 
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
