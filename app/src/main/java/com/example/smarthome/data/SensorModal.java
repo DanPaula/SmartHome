@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class SensorModal implements Parcelable {
+public class SensorModal implements Parcelable{
 
     private String sensorName;
     private String sensorType;
@@ -19,9 +19,17 @@ public class SensorModal implements Parcelable {
     }
 
     protected SensorModal(Parcel in) {
+        sensorID = in.readString();
         sensorName = in.readString();
         sensorType = in.readString();
         sensorImg = in.readString();
+    }
+
+    public SensorModal(String sensorId, String sensorName, String sensorType, String sensorImage) {
+        this.sensorID = sensorId;
+        this.sensorName = sensorName;
+        this.sensorType = sensorType;
+        this.sensorImg = sensorImage;
     }
 
     public void setSensorImg(String sensorImg) {
@@ -78,6 +86,7 @@ public class SensorModal implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(sensorID);
         parcel.writeString(sensorName);
         parcel.writeString(sensorType);
         parcel.writeString(sensorImg);

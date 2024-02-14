@@ -48,6 +48,10 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:20.3.0")
     implementation (platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation ("com.squareup.picasso:picasso:2.71828")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

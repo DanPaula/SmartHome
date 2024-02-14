@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.smarthome.data.Sensor;
 import com.example.smarthome.data.SensorModal;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,12 +25,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import android.net.Uri;
 
 public class AddSensorsActivity extends AppCompatActivity {
 
@@ -48,6 +55,8 @@ public class AddSensorsActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterItems;
 
     ProgressBar progressBar;
+    Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +90,10 @@ public class AddSensorsActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 if(sensorType == "Temperature and Humidity")
                 {
-                    sensorImage = "thermometer";
+                    sensorImage = "https://firebasestorage.googleapis.com/v0/b/smarthome-a51d2.appspot.com/o/thermometer.png?alt=media&token=56eaa17a-5680-4b4e-b24c-01bc36cbab47";
                 }
 
-                SensorModal sensor = new SensorModal(sensor_name, sensorType, sensorImage);
+                SensorModal sensor = new SensorModal(sensor_id, sensor_name, sensorType, sensorImage);
 
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -108,6 +117,6 @@ public class AddSensorsActivity extends AppCompatActivity {
             }
         });
 
-
     }
+
 }

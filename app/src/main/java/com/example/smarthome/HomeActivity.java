@@ -8,20 +8,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
 
+import com.bumptech.glide.Glide;
 import com.example.smarthome.data.SensorAdapter;
 import com.example.smarthome.data.SensorModal;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,10 +38,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity{
+public class HomeActivity extends AppCompatActivity implements SensorAdapter.SensorClickInterface{
 
     private FloatingActionButton add;
     FirebaseAuth mAuth;
@@ -78,11 +86,13 @@ public class HomeActivity extends AppCompatActivity{
     }
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        relativeLayout = findViewById(R.id.idBottomSheet);
         sensorView = findViewById(R.id.idSensors);
         add = findViewById(R.id.idAddSensor);
         mAuth = FirebaseAuth.getInstance();
@@ -116,9 +126,10 @@ public class HomeActivity extends AppCompatActivity{
         }
     }
 
-    private void onSensorClick(int position) {
+    @Override
+    public void onSensorClick(int position) {
         //calling a method to display a bottom sheet on below line.
-        //displayBottomSheet(sensorModalArrayList.get(position));
+        displayBottomSheet(sensorModalArrayList.get(position));
     }
 
     private void getSensors() {
@@ -202,5 +213,48 @@ public class HomeActivity extends AppCompatActivity{
 
             }
         });
+    }
+
+    private void displayBottomSheet(SensorModal modal){
+        final BottomSheetDialog bottomSheetTeachersDialog = new BottomSheetDialog(this, R.style.AppBottomSheetDialogTheme);
+        View layout = LayoutInflater.from(this).inflate(R.layout.bottom_options_layout, relativeLayout);
+
+        bottomSheetTeachersDialog.setContentView(layout);
+        //on below line we are setting a cancelable
+        bottomSheetTeachersDialog.setCancelable(false);
+        bottomSheetTeachersDialog.setCanceledOnTouchOutside(true);
+        //calling a method to display our bottom sheet.
+        bottomSheetTeachersDialog.show();
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = firebaseDatabase.getReference("Users");
+
+        //on below line we are creating variables for our text view inside bottom sheet
+        //and initialing them with their ids.
+        TextView sensorNameTV = layout.findViewById(R.id.idSensorName);
+        TextView sensorTypeTV = layout.findViewById(R.id.idSensorType);
+        TextView sensorID = layout.findViewById(R.id.idSensorIdEdit);
+        ImageView imageViewTV = layout.findViewById(R.id.idSensorImage);
+        Button editBtn = layout.findViewById(R.id.idBtnEditSensor);
+
+        sensorNameTV.setText(modal.getSensorName());
+        sensorTypeTV.setText(modal.getSensorType());
+        sensorID.setText(modal.getSensorID());
+        //Query query = databaseReference.child("Sensors").orderByChild("sensorId").equalsTo("sensor");
+
+        String imagePath = modal.getSensorImg();
+        Glide.with(getApplicationContext()).load(imagePath).into(imageViewTV);
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //on below line we are opening our EditSensorActivity on below line.
+                Intent i = new Intent(HomeActivity.this, EditSensorActivity.class);
+                //on below line we are passing our sensor modal
+                i.putExtra("sensor", modal);
+                startActivity(i);
+            }
+        });
+
     }
 }

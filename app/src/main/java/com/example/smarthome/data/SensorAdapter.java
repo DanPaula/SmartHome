@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +25,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.smarthome.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.ViewHolder> {
@@ -32,6 +37,9 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.ViewHolder
     private ArrayList<SensorModal> sensorModalArrayList;
     private Context context;
     private SensorClickInterface sensorClickInterface;
+
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+
     int lastPos = -1;
 
     public SensorAdapter(ArrayList<SensorModal> sensorModalArrayList, Context context, SensorClickInterface sensorClickInterface) {
@@ -55,13 +63,9 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.ViewHolder
         holder.sensorName.setText(sensorModal.getSensorName());
         holder.sensorType.setText(sensorModal.getSensorType());
 
-        String imagePath = sensorModal.getSensorImg().toString();
+        String imagePath = sensorModal.getSensorImg();
 
-        if (imagePath == "thermometer")
-        {
-            holder.sensorImage.setImageResource(R.drawable.thermometer);
-        }
-
+        Glide.with(context).load(imagePath).into(holder.sensorImage);
         //adding animation to recycler view item on below line.
         setAnimation(holder.itemView, position);
         holder.sensorName.setOnClickListener(new View.OnClickListener() {
