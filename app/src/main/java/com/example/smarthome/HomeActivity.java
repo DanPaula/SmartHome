@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,23 +21,20 @@ import android.widget.Toast;
 import android.view.Menu;
 
 import com.bumptech.glide.Glide;
+import com.example.smarthome.actions.AddSensorsActivity;
+import com.example.smarthome.actions.EditSensorActivity;
+import com.example.smarthome.actions.ViewSensorInfoActivity;
 import com.example.smarthome.data.SensorAdapter;
 import com.example.smarthome.data.SensorModal;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -110,7 +105,7 @@ public class HomeActivity extends AppCompatActivity implements SensorAdapter.Sen
 
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(),AddSensorsActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), AddSensorsActivity.class);
                     startActivity(intent);
                 }
             });
@@ -236,6 +231,7 @@ public class HomeActivity extends AppCompatActivity implements SensorAdapter.Sen
         TextView sensorID = layout.findViewById(R.id.idSensorIdEdit);
         ImageView imageViewTV = layout.findViewById(R.id.idSensorImage);
         Button editBtn = layout.findViewById(R.id.idBtnEditSensor);
+        Button viewBtn = layout.findViewById(R.id.idBtnViewValuesSensor);
 
         sensorNameTV.setText(modal.getSensorName());
         sensorTypeTV.setText(modal.getSensorType());
@@ -255,6 +251,16 @@ public class HomeActivity extends AppCompatActivity implements SensorAdapter.Sen
                 startActivity(i);
             }
         });
+
+        viewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this, ViewSensorInfoActivity.class);
+                i.putExtra("sensor", modal);
+                startActivity(i);
+            }
+        });
+
 
     }
 }
