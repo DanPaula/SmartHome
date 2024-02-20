@@ -30,7 +30,7 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     SensorModal sensorModal;
     private String sensorId, sensorType, sensorImg;
-    String temperature, humidity;
+    double temperature, humidity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,44 +42,28 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
         sensorHumidity = (TextView) findViewById(R.id.idHumidity);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        // on below line creating our database reference.
-
-
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //on below line we are setting data in our firebase database.
-        //databaseReference.child(uid).child("Sensors").child(sensor_id).setValue(sensor);
+
         sensorModal = (SensorModal) getIntent().getParcelableExtra("sensor");
 
         if(sensorModal!=null){
-            sensorId = sensorModal.getSensorID(); //this is null and creates the issue below
+            sensorId = sensorModal.getSensorID();
             sensorName.setText(sensorModal.getSensorName());
             sensorType = sensorModal.getSensorType();
             sensorImg = sensorModal.getSensorImg();
-            //here also get temp and humidity??
         }
 
-        //this is null...
         databaseReference = firebaseDatabase.getReference("Users").child(uid).child("Sensors").child(sensorId);
-       // TemperatureHumiditySensor temperatureHumiditySensor = databaseReference.child(uid).child("Sensors").child(sensorId).getValue("temperature");
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for(DataSnapshot sensorSnapshot: snapshot.getChildren())
-                {
-                    if(sensorSnapshot.getKey().equals("temperature"))
-                    {
-                        temperature = sensorSnapshot.child("temperature").getValue().toString();
-                    }
-                    else if(sensorSnapshot.getKey().equals("humidity"))
-                    {
-                        humidity = sensorSnapshot.child("humidity").getValue().toString();
-                    }
-                }
+                TemperatureHumiditySensor temperatureHumiditySensor = snapshot.getValue(TemperatureHumiditySensor.class);
+                humidity = temperatureHumiditySensor.getHumidity();
+                temperature = temperatureHumiditySensor.getTemperature();
 
-                sensorTemperature.setText(temperature);
-                sensorHumidity.setText(humidity);
+                sensorTemperature.setText(String.valueOf(temperature));
+                sensorHumidity.setText(String.valueOf(humidity));
             }
 
             @Override

@@ -7,7 +7,7 @@ public class TemperatureHumiditySensor extends SensorModal {
     double temperature, humidity;
 
     public TemperatureHumiditySensor(SensorModal sensor, double temperature, double humidity) {
-        super(sensor.getSensorName(), sensor.getSensorType(), sensor.getSensorImg());
+        super(sensor.getSensorID(), sensor.getSensorName(), sensor.getSensorType(), sensor.getSensorImg());
         this.temperature = temperature;
         this.humidity = humidity;
     }
@@ -15,6 +15,10 @@ public class TemperatureHumiditySensor extends SensorModal {
     public TemperatureHumiditySensor(double temperature, double humidity) {
         this.temperature = temperature;
         this.humidity = humidity;
+    }
+
+    public TemperatureHumiditySensor(){
+
     }
 
     public double getTemperature() {
