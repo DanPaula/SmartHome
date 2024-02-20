@@ -62,8 +62,8 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
                 humidity = temperatureHumiditySensor.getHumidity();
                 temperature = temperatureHumiditySensor.getTemperature();
 
-                sensorTemperature.setText(String.valueOf(temperature));
-                sensorHumidity.setText(String.valueOf(humidity));
+                sensorTemperature.setText("Temperature: " + String.valueOf(temperature) + "° C");
+                sensorHumidity.setText("Humidity: " + String.valueOf(humidity));
             }
 
             @Override
