@@ -28,7 +28,7 @@ public class HttpAsyncTask extends AsyncTask<String, Void, String> {
         try {
 
             // Send user ID to Arduino
-            URL userUrl = new URL("http://192.168.1.135/user");
+            URL userUrl = new URL("http:///user");
             HttpURLConnection userConnection = (HttpURLConnection) userUrl.openConnection();
             userConnection.setRequestMethod("POST");
             userConnection.setDoOutput(true);
