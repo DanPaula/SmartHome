@@ -27,10 +27,10 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
     //aici ar putea fi o interfata cu view pentru diferiti sensor si sa faci implement la activitatea care e specifica senzorului
     TextView sensorName, sensorTemperature, sensorHumidity;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReferenceS;
     SensorModal sensorModal;
     private String sensorId, sensorType, sensorImg;
-    double temperature, humidity;
+    String temperature, humidity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +52,17 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
             sensorType = sensorModal.getSensorType();
             sensorImg = sensorModal.getSensorImg();
         }
-
-        databaseReference = firebaseDatabase.getReference("Users").child(uid).child("Sensors").child(sensorId);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReferenceS = firebaseDatabase.getReference("Sensors").child(sensorId);
+        //databaseReference = firebaseDatabase.getReference("Users").child(uid).child("Sensors").child(sensorId);
+        databaseReferenceS.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //TemperatureHumiditySensor temperatureHumiditySensor = snapshot.getValue(TemperatureHumiditySensor.class);
+                humidity = snapshot.child("humidity").getValue(String.class);
+                temperature = snapshot.child("temperature").getValue(String.class);
 
-                TemperatureHumiditySensor temperatureHumiditySensor = snapshot.getValue(TemperatureHumiditySensor.class);
-                humidity = temperatureHumiditySensor.getHumidity();
-                temperature = temperatureHumiditySensor.getTemperature();
-
-                sensorTemperature.setText("Temperature: " + String.valueOf(temperature) + "° C");
-                sensorHumidity.setText("Humidity: " + String.valueOf(humidity));
+                sensorTemperature.setText("Temperature: " + temperature + "° C");
+                sensorHumidity.setText("Humidity: " + humidity);
             }
 
             @Override

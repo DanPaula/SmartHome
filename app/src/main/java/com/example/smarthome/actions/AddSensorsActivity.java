@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.smarthome.HomeActivity;
+import com.example.smarthome.HttpAsyncTask;
 import com.example.smarthome.R;
 import com.example.smarthome.data.Sensor;
 import com.example.smarthome.data.SensorModal;
@@ -31,7 +32,7 @@ import android.net.Uri;
 public class AddSensorsActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReferenceS;
 
     Button btnAddSensor;
 
@@ -46,6 +47,8 @@ public class AddSensorsActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterItems;
 
     ProgressBar progressBar;
+
+    HttpAsyncTask httpAsyncTask;
     double temperature = 20.5, humidity = 60.0;
 
 
@@ -71,6 +74,18 @@ public class AddSensorsActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         // on below line creating our database reference.
         databaseReference = firebaseDatabase.getReference("Users");
+        databaseReferenceS = firebaseDatabase.getReference("Sensors");
+        httpAsyncTask = new HttpAsyncTask(getApplicationContext());
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        httpAsyncTask.execute(uid);
+        /*if(httpAsyncTask.sensorID.equals(sensorID))
+        {
+            Toast.makeText(getApplicationContext(), "Sensors ID match", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Something is wrong, sensor ids do not match. Please check again!", Toast.LENGTH_SHORT).show();
+        }*/
 
         btnAddSensor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +102,24 @@ public class AddSensorsActivity extends AppCompatActivity {
 
                 //this part can be made in a function with parameters that is called specifically for each sensor
                 SensorModal sensor = new SensorModal(sensor_id, sensor_name, sensorType, sensorImage);
+                databaseReferenceS.child("Sensors").child(sensor_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists())
+                        {
+                            temperature = snapshot.child("temperature").getValue(Double.class);
+                            humidity = snapshot.child("humidity").getValue(Double.class);
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "Sensor must be first activated!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
                 TemperatureHumiditySensor temperatureHumiditySensor = new TemperatureHumiditySensor(sensor, temperature, humidity);
 
                 databaseReference.addValueEventListener(new ValueEventListener() {
@@ -95,7 +128,6 @@ public class AddSensorsActivity extends AppCompatActivity {
                         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         //on below line we are setting data in our firebase database.
                         //databaseReference.child(uid).child("Sensors").child(sensor_id).setValue(sensor);
-
                         //issues with adding sensor??
                         databaseReference.child(uid).child("Sensors").child(sensor_id).setValue(temperatureHumiditySensor);
                         //displaying a toast message.
