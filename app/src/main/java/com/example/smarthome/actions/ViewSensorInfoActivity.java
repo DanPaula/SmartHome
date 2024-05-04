@@ -30,7 +30,7 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
     DatabaseReference databaseReference, databaseReferenceS;
     SensorModal sensorModal;
     private String sensorId, sensorType, sensorImg;
-    String temperature, humidity;
+    Long temperature, humidity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +52,17 @@ public class ViewSensorInfoActivity extends AppCompatActivity {
             sensorType = sensorModal.getSensorType();
             sensorImg = sensorModal.getSensorImg();
         }
-        databaseReferenceS = firebaseDatabase.getReference("Sensors").child(sensorId);
-        //databaseReference = firebaseDatabase.getReference("Users").child(uid).child("Sensors").child(sensorId);
-        databaseReferenceS.addValueEventListener(new ValueEventListener() {
+        //databaseReferenceS = firebaseDatabase.getReference("Sensors").child(sensorId);
+        databaseReference = firebaseDatabase.getReference("Users").child(uid).child("Sensors").child(sensorId);
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //TemperatureHumiditySensor temperatureHumiditySensor = snapshot.getValue(TemperatureHumiditySensor.class);
-                humidity = snapshot.child("humidity").getValue(String.class);
-                temperature = snapshot.child("temperature").getValue(String.class);
+                humidity = snapshot.child("humidity").getValue(Long.class);
+                temperature = snapshot.child("temperature").getValue(Long.class);
 
-                sensorTemperature.setText("Temperature: " + temperature + "° C");
-                sensorHumidity.setText("Humidity: " + humidity);
+                sensorTemperature.setText("Temperature: " + temperature.toString() + "° C");
+                sensorHumidity.setText("Humidity: " + humidity.toString());
             }
 
             @Override
